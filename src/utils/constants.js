@@ -31,6 +31,24 @@ export const VALIDATION_RULES = {
 export const MAX_GAMES_TO_FETCH = 200;
 export const RECENT_MONTHS_TO_FETCH = 6;
 
+// Lichess OAuth configuration
+// Use a function to get config with window.location at runtime
+export const getLichessOAuthConfig = () => ({
+  clientId: 'ragstoriches-ai-coach',
+  authorizationUrl: 'https://lichess.org/oauth',
+  tokenUrl: 'https://lichess.org/api/token',
+  redirectUrl: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
+  scopes: ['challenge:read', 'challenge:write'],
+  onAccessTokenExpiry: (refreshAccessToken) => refreshAccessToken(),
+  onInvalidGrant: () => console.warn('Invalid grant - re-authentication required')
+});
+
+// Lichess OAuth state constants
+export const LICHESS_STATE_LOGGED_OUT = 'logged_out';
+export const LICHESS_STATE_PENDING = 'pending';
+export const LICHESS_STATE_LOGGED_IN = 'logged_in';
+export const LICHESS_STATE_FAILED = 'failed';
+
 // Error messages
 export const ERROR_MESSAGES = {
   USERNAME_REQUIRED: 'Username is required',

@@ -8,9 +8,10 @@ import { PLATFORM_CHESSCOM, PLATFORM_LICHESS } from '../utils/constants';
  * @param {string} params.platform - Chess platform (chesscom or lichess)
  * @param {string} params.username - Username
  * @param {string} params.color - Color filter (white, black, or both)
+ * @param {string} params.accessToken - Optional OAuth access token for Lichess
  * @returns {Promise<Array>} - Array of game objects
  */
-export async function fetchGames({ platform, username, color }) {
+export async function fetchGames({ platform, username, color, accessToken = null }) {
   if (!platform) {
     throw new Error('Platform is required');
   }
@@ -28,7 +29,7 @@ export async function fetchGames({ platform, username, color }) {
   if (platform === PLATFORM_CHESSCOM) {
     return await fetchChessComGames(trimmedUsername, color);
   } else if (platform === PLATFORM_LICHESS) {
-    return await fetchLichessGames(trimmedUsername, color);
+    return await fetchLichessGames(trimmedUsername, color, accessToken);
   } else {
     throw new Error(`Unsupported platform: ${platform}`);
   }

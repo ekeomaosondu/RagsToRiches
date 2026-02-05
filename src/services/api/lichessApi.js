@@ -11,18 +11,26 @@ import {
  * Fetch games from Lichess API
  * @param {string} username - Lichess username
  * @param {string} color - Color filter (white, black, or both)
+ * @param {string} accessToken - Optional OAuth access token for authenticated requests
  * @returns {Promise<Array>} - Array of game objects
  */
-export async function fetchLichessGames(username, color) {
+export async function fetchLichessGames(username, color, accessToken = null) {
   try {
     // Build URL with query parameters
     const colorParam = color === COLOR_BOTH ? '' : `&color=${color}`;
     const url = `${LICHESS_API_BASE}/games/user/${username}?max=${MAX_GAMES_TO_FETCH}&pgnInJson=false&clocks=false&evals=false&opening=false${colorParam}`;
 
+    // Build headers - include Authorization if token is provided
+    const headers = {
+      'Accept': 'application/x-ndjson'
+    };
+
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     const response = await fetch(url, {
-      headers: {
-        'Accept': 'application/x-ndjson'
-      }
+      headers
     });
 
     if (!response.ok) {
